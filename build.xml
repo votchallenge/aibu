@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="jar" name="aibu" xmlns:ivy="antlib:org.apache.ivy.ant">
+	<property environment="env" />
+	<property name="debuglevel" value="source,lines,vars" />
+	<property name="target" value="1.5" />
+	<property name="source" value="1.5" />
+    <property name="version" value="0.3" />
+    <target name="ivy">
+        <path id="ivy.lib.path">
+            <fileset dir="${user.home}/.ant/" includes="*.jar"/>
+            <fileset dir="/usr/share/java/" includes="*.jar"/>
+        </path>
+        <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
+    </target> 
+
+	<target name="init" depends="ivy">
+		<mkdir dir="bin" />
+		<mkdir dir="deploy" />
+	</target>
+	<target name="clean">
+		<delete dir="bin" />
+		<delete dir="deploy" />
+	</target>
+	<target depends="clean" name="cleanall" />
+	<target name="build" depends="init,resolve">
+		<echo message="Building Aibu editor" />
+		<javac debug="true" debuglevel="${debuglevel}" destdir="bin" srcdir="src" source="${source}" target="${target}" includeantruntime="false">
+			<classpath>
+				<path location="bin" />
+				<fileset dir="deploy">
+					<include name="coffeeshop*.jar" />
+				</fileset>
+			</classpath>
+		</javac>
+        <copy todir="bin">
+            <fileset dir="src"  excludes="**/*.launch, **/*.java"/>
+        </copy>
+	</target>
+	<target name="jar" depends="build">
+		<jar destfile="deploy/aibu-base.jar" basedir="bin">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+                <attribute name="Main-Class" value="si.vicos.annotations.editor.Annotator" />
+			</manifest>
+		</jar>
+	</target>
+	<target name="resolve" description="Retreive dependencies with ivy">
+		<ivy:retrieve pattern="deploy/[module].[artifact].[ext]" />
+	</target>
+	<target name="publish-version" depends="bigjar">
+		<ivy:resolve revision="${version}" />
+		<ivy:publish resolver="local" pubrevision="${version}" status="release" update="true" overwrite="true">
+			<artifacts pattern="deploy/[artifact].[ext]" />
+		</ivy:publish>
+	</target>
+	<target name="publish-working" depends="bigjar">
+		<ivy:resolve />
+		<ivy:publish resolver="local" status="release" update="true" overwrite="true">
+			<artifacts pattern="deploy/[artifact].[ext]" />
+		</ivy:publish>
+	</target>
+	<target name="bigjar" depends="jar" description="Build one big jar">
+		<jar destfile="deploy/aibu.jar">
+			<zipgroupfileset dir="deploy">
+				<filename name="*.jar" />
+				<not>
+					<filename name="aibu.jar" />
+				</not>
+			</zipgroupfileset>
+			<manifest>
+				<attribute name="Main-Class" value="si.vicos.annotations.editor.Annotator" />
+			</manifest>
+		</jar>
+		<chmod file="deploy/aibu.jar" perm="755" />
+	</target>
+</project>

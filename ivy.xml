@@ -1,0 +1,14 @@
+<ivy-module version="2.0">
+    <info organisation="vicos" module="aibu"/>
+    <publications>
+    	<artifact name="aibu" type="jar" ext="jar"/>
+    </publications>
+    <dependencies>
+  		<dependency org="lukacu" name="coffeeshop" rev="latest.integration">
+			<artifact name="core" type="jar" ext="jar"/>
+			<artifact name="application" type="jar" ext="jar"/>
+			<artifact name="gui" type="jar" ext="jar"/>
+			<artifact name="figure" type="jar" ext="jar"/>
+		</dependency>
+    </dependencies>
+</ivy-module>
