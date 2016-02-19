@@ -187,6 +187,49 @@ public class Values {
 	}
 
 	/**
+	 * Remove all values for a given frame.
+	 * 
+	 * @param index
+	 *            the index
+	 */
+	public void removeValues(int index) {
+
+		if (index < 0 || index >= size())
+			return;
+
+		Map<String, String> tmp = values.elementAt(index);
+
+		if (tmp == null)
+			return;
+
+		tmp.clear();
+
+	}
+	
+	/**
+	 * Remove specified values for a given frame.
+	 * 
+	 * @param index
+	 *            the index
+	 * @param keys
+	 *            the keys
+	 */
+	public void removeValues(int index, Set<String> keys) {
+
+		if (index < 0 || index >= size())
+			return;
+
+		Map<String, String> tmp = values.elementAt(index);
+
+		if (tmp == null)
+			return;
+
+		for (String key : keys)
+			tmp.remove(key);
+
+	}
+	
+	/**
 	 * Gets the values.
 	 * 
 	 * @param index

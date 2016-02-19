@@ -292,6 +292,29 @@ public class Tags {
 	}
 
 	/**
+	 * Removes all tags for a given frame.
+	 * 
+	 * @param index
+	 *            the index
+	 */
+	public void removeTags(int index) {
+
+		if (index < 0 || tags == null)
+			return;
+
+		if (index >= this.tags.size())
+			return;
+
+		Set<String> tmp = this.tags.get(index);
+
+		if (tmp == null)
+			return;
+
+		tmp.clear();
+
+	}
+	
+	/**
 	 * Size.
 	 * 
 	 * @return the int
