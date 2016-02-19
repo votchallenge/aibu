@@ -30,9 +30,9 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.InputMap;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
@@ -48,6 +48,7 @@ import org.coffeeshop.awt.ColorIterator;
 import org.coffeeshop.settings.PrefixProxySettings;
 import org.coffeeshop.settings.Settings;
 import org.coffeeshop.string.StringUtils;
+import org.coffeeshop.swing.ImageStore;
 import org.coffeeshop.swing.PersistentWindow;
 import org.coffeeshop.swing.ToolTipAction;
 import org.coffeeshop.swing.figure.FigurePanel;
@@ -87,16 +88,31 @@ public class TrackingViewer extends PersistentWindow {
 	 */
 	private static enum ValueType {
 
-		/** The label. */
-		LABEL,
+		/** The tag. */
+		TAG,
 		/** The numerical. */
 		NUMERICAL,
 		/** The strings. */
-		STRINGS,
+		STRING,
 		/** The points. */
 		POINTS
 	}
 
+	private static final Icon annotationIcon = ImageStore
+			.getIcon("annotations");
+	
+	private static final Icon tagIcon = ImageStore
+			.getIcon("value-tag");
+	
+	private static final Icon numericalIcon = ImageStore
+			.getIcon("value-numerical");
+	
+	private static final Icon stringIcon = ImageStore
+			.getIcon("value-string");
+	
+	private static final Icon pointsIcon = ImageStore
+			.getIcon("value-points");
+	
 	/** The cached colors. */
 	private static Hashtable<String, Color> cachedColors = new Hashtable<String, Color>();
 
@@ -161,7 +177,7 @@ public class TrackingViewer extends PersistentWindow {
 	private static final long serialVersionUID = 1L;
 
 	/** The first. */
-	private Action first = new ToolTipAction("First", "go-first-16.png") {
+	private Action first = new ToolTipAction("First", "go-first") {
 
 		private static final long serialVersionUID = 1L;
 
@@ -174,7 +190,7 @@ public class TrackingViewer extends PersistentWindow {
 
 	/** The previous. */
 	private Action previous = new ToolTipAction("Previous",
-			"go-previous-16.png") {
+			"go-previous") {
 
 		private static final long serialVersionUID = 1L;
 
@@ -186,7 +202,7 @@ public class TrackingViewer extends PersistentWindow {
 	};
 
 	/** The next. */
-	private Action next = new ToolTipAction("Next", "go-next-16.png") {
+	private Action next = new ToolTipAction("Next", "go-next") {
 
 		private static final long serialVersionUID = 1L;
 
@@ -198,7 +214,7 @@ public class TrackingViewer extends PersistentWindow {
 	};
 
 	/** The last. */
-	private Action last = new ToolTipAction("Last", "go-last-16.png") {
+	private Action last = new ToolTipAction("Last", "go-last") {
 
 		private static final long serialVersionUID = 1L;
 
@@ -235,17 +251,12 @@ public class TrackingViewer extends PersistentWindow {
 		/** The Constant serialVersionUID. */
 		private static final long serialVersionUID = 1L;
 
-		/** The value label. */
-		JLabel valueLabel = new JLabel();
-
-		/** The source label. */
-		JLabel sourceLabel = new JLabel();
-
 		/**
 		 * Instantiates a new viewer tree cell renderer.
 		 */
 		public ViewerTreeCellRenderer() {
 
+					
 		}
 
 		/*
@@ -260,50 +271,47 @@ public class TrackingViewer extends PersistentWindow {
 				boolean selected, boolean expanded, boolean leaf, int row,
 				boolean hasFocus) {
 
-			Component returnValue = null;
+			Component c = super.getTreeCellRendererComponent(tree, value, selected,
+					expanded, leaf, row, hasFocus);
 
+			Font normalFont = TrackingViewer.this.getFont();
+			
+			this.setFont(normalFont);
+			
 			if (value == null)
 				return null;
 
-			if (value instanceof ViewerTreeModel.AnnotationSource) {
+			if (value instanceof NodeStyle) {
 
-				ViewerTreeModel.AnnotationSource obj = (ViewerTreeModel.AnnotationSource) value;
+				NodeStyle obj = (NodeStyle) value;
 
-				sourceLabel.setText(value.toString());
-
-				sourceLabel
-						.setBackground(selected ? getBackgroundSelectionColor()
-								: getBackgroundNonSelectionColor());
-
-				returnValue = sourceLabel;
-
+				this.setIcon(obj.getIcon());
+				
 			}
 
 			if (value instanceof ViewerTreeModel.AnnotationSource.ValuesAnnotations) {
 
 				ViewerTreeModel.AnnotationSource.ValuesAnnotations obj = (ViewerTreeModel.AnnotationSource.ValuesAnnotations) value;
 
-				valueLabel.setText(value.toString());
-
-				valueLabel
-						.setBackground(selected ? getBackgroundSelectionColor()
-								: getBackgroundNonSelectionColor());
-
-				valueLabel.setFont(obj.isPlotVisible() ? getFont().deriveFont(
-						Font.BOLD) : getFont());
-
-				returnValue = valueLabel;
-
+				if (obj.isPlotVisible())
+					this.setFont(normalFont.deriveFont(
+							Font.BOLD));
+				
 			}
-
-			if (returnValue == null) {
-				returnValue = super.getTreeCellRendererComponent(tree, value,
-						selected, expanded, leaf, row, hasFocus);
-			}
-			return returnValue;
+			
+			return c;
 		}
 	}
 
+	private static interface NodeStyle {
+		
+		public Icon getIcon();
+		
+		public Color getColor();
+		
+	}
+	
+	
 	/**
 	 * The Class ViewerTreeModel.
 	 */
@@ -326,16 +334,17 @@ public class TrackingViewer extends PersistentWindow {
 			this.bounds.setRect(0, 0, 1, 1);
 		}
 
+
 		/**
 		 * The Class AnnotationSource.
 		 */
 		private class AnnotationSource extends TransferableAnnotations
-				implements TreeNode {
+				implements TreeNode, NodeStyle {
 
 			/**
 			 * The Class ValuesAnnotations.
 			 */
-			private class ValuesAnnotations implements TreeNode {
+			private class ValuesAnnotations implements TreeNode, NodeStyle {
 
 				/** The key. */
 				private String key;
@@ -456,9 +465,9 @@ public class TrackingViewer extends PersistentWindow {
 					case NUMERICAL:
 						plot = new ValuePlot(getAnnotations(), key, color);
 						break;
-					case STRINGS:
+					case STRING:
 						break;
-					case LABEL:
+					case TAG:
 						break;
 					case POINTS:
 						break;
@@ -478,6 +487,27 @@ public class TrackingViewer extends PersistentWindow {
 				 */
 				public boolean isPlotVisible() {
 					return plot != null;
+				}
+
+				@Override
+				public Icon getIcon() {
+					switch (type) {
+					case NUMERICAL:
+						return numericalIcon;
+					case STRING:
+						return stringIcon;
+					case TAG:
+						return tagIcon;
+					case POINTS:
+						return pointsIcon;
+					}
+					return numericalIcon;
+				}
+
+				@Override
+				public Color getColor() {
+					// TODO Auto-generated method stub
+					return null;
 				}
 
 			}
@@ -513,13 +543,13 @@ public class TrackingViewer extends PersistentWindow {
 				crashes = annotations.findTag("crash");
 				failures = annotations.findTag("failure");
 
-				Vector<String> labelKeys = new Vector<String>(
+				Vector<String> tagKeys = new Vector<String>(
 						annotations.getTags());
 
-				Collections.sort(labelKeys);
+				Collections.sort(tagKeys);
 
-				for (String label : labelKeys) {
-					values.add(new ValuesAnnotations(label, ValueType.LABEL));
+				for (String label : tagKeys) {
+					values.add(new ValuesAnnotations(label, ValueType.TAG));
 				}
 
 				Vector<String> valueKeys = new Vector<String>(
@@ -624,6 +654,12 @@ public class TrackingViewer extends PersistentWindow {
 				return color;
 
 			}
+			
+			public Icon getIcon() {
+				
+				return annotationIcon;
+				
+			}
 
 		}
 
@@ -674,7 +710,7 @@ public class TrackingViewer extends PersistentWindow {
 
 			timeline.setLength(length);
 			timeline.repaint();
-			timeline.getTrack("labels").addObject(this);
+			timeline.getTrack("tags").addObject(this);
 
 			values.reload(this);
 
@@ -821,15 +857,19 @@ public class TrackingViewer extends PersistentWindow {
 					this.paintMarkers(instance.initializations, g,
 							pretransform, initializationShape, current);
 
+				current += step / 3;
+				
 				if (instance.failures != null)
 					this.paintMarkers(instance.failures, g, pretransform,
 							failureShape, current);
 
+				current += step / 3;
+				
 				if (instance.crashes != null)
 					this.paintMarkers(instance.crashes, g, pretransform,
 							crashShape, current);
 
-				current += step;
+				current += step / 3;
 
 			}
 
@@ -845,7 +885,7 @@ public class TrackingViewer extends PersistentWindow {
 		@Override
 		public String getToolTip(Point2D point) {
 
-			int frame = (int) point.getX();
+			//int frame = (int) point.getX();
 
 			return null;
 		}
@@ -889,7 +929,7 @@ public class TrackingViewer extends PersistentWindow {
 
 		this.timeline = new Timeline(1, new PrefixProxySettings(settings,
 				"timeline@"));
-		this.timeline.getTrack("labels").addObject(model);
+		this.timeline.getTrack("tags").addObject(model);
 
 		this.values = new DefaultTreeModel(model);
 
@@ -940,13 +980,13 @@ public class TrackingViewer extends PersistentWindow {
 		JToolBar menu = new JToolBar(JToolBar.HORIZONTAL);
 
 		menu.setFloatable(false);
-
+		
 		menu.add(first);
 		menu.add(previous);
 		menu.add(next);
 		menu.add(last);
 
-		add(menu, BorderLayout.NORTH);
+		add(menu, BorderLayout.SOUTH);
 
 		initKeyboardShortcuts();
 
