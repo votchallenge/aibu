@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="jar" name="aibu" xmlns:ivy="antlib:org.apache.ivy.ant">
+<project basedir="." default="bigjar" name="aibu" xmlns:ivy="antlib:org.apache.ivy.ant">
 	<property environment="env" />
 	<property name="debuglevel" value="source,lines,vars" />
 	<property name="target" value="1.5" />
