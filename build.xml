@@ -7,7 +7,6 @@
     <property name="version" value="0.3" />
     <target name="ivy">
         <path id="ivy.lib.path">
-            <fileset dir="${user.home}/.ant/" includes="*.jar"/>
             <fileset dir="/usr/share/java/" includes="*.jar"/>
         </path>
         <taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path"/>
