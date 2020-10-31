@@ -375,7 +375,7 @@ public class TrackingViewer extends PersistentWindow {
 				 * @see javax.swing.tree.TreeNode#children()
 				 */
 				@Override
-				public Enumeration<?> children() {
+				public Enumeration<? extends TreeNode> children() {
 					return null;
 				}
 
@@ -569,7 +569,7 @@ public class TrackingViewer extends PersistentWindow {
 			 * @see javax.swing.tree.TreeNode#children()
 			 */
 			@Override
-			public Enumeration<?> children() {
+			public Enumeration<? extends TreeNode> children() {
 				return values.elements();
 			}
 
@@ -760,7 +760,7 @@ public class TrackingViewer extends PersistentWindow {
 		 * @see javax.swing.tree.TreeNode#children()
 		 */
 		@Override
-		public Enumeration<?> children() {
+		public Enumeration<? extends TreeNode> children() {
 			return instances.elements();
 		}
 

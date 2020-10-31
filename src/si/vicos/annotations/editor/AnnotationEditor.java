@@ -8,10 +8,7 @@ import java.awt.Stroke;
 
 import org.coffeeshop.swing.figure.FigurePanel;
 
-import si.vicos.annotations.Annotation;
-import si.vicos.annotations.PointAnnotation;
-import si.vicos.annotations.PolygonAnnotation;
-import si.vicos.annotations.RectangleAnnotation;
+import si.vicos.annotations.*;
 import si.vicos.annotations.editor.AnnotatedImageFigure.AnnotationPeer;
 
 /**
@@ -160,6 +157,8 @@ public abstract class AnnotationEditor extends AnnotationViewer {
 			return new RectangleAnnotationEditor(peer, color);
 		if (a instanceof PolygonAnnotation)
 			return new PolygonAnnotationEditor(peer, color);
+		if(a instanceof SegmentationMaskAnnotation)
+			return new SegmentationMaskAnnotationEditor(peer, color);
 
 		return null;
 	}

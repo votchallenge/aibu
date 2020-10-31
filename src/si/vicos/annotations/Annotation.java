@@ -54,7 +54,9 @@ public abstract class Annotation implements Cloneable {
 		/** The polygon. */
 		POLYGON,
 		/** The rectangles. */
-		RECTANGLES
+		RECTANGLES,
+		/** The segmentation mask. */
+		SEGMENTATION_MASK
 	}
 
 	/** The Constant aliases. */
@@ -62,7 +64,8 @@ public abstract class Annotation implements Cloneable {
 			{ "point", PointAnnotation.class, AnnotationType.POINT },
 			{ "label", LabelAnnotation.class, AnnotationType.LABEL },
 			{ "rect", RectangleAnnotation.class, AnnotationType.RECTANGLE },
-			{ "polygon", PolygonAnnotation.class, AnnotationType.POLYGON }, };
+			{ "polygon", PolygonAnnotation.class, AnnotationType.POLYGON },
+			{ "mask", SegmentationMaskAnnotation.class, AnnotationType.SEGMENTATION_MASK}};
 
 	/**
 	 * Alias to class.
