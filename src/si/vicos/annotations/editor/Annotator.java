@@ -1,5 +1,6 @@
 package si.vicos.annotations.editor;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontFormatException;
 import java.awt.event.ActionEvent;
@@ -33,14 +34,14 @@ import si.vicos.annotations.editor.tracking.UndoableAnnotatedSequence;
 public class Annotator extends Application {
 
 	/** The Constant Authors. */
-	public static final String[][] Authors = { { "Luka \u010Cehovin",
+	public static final String[][] Authors = { { "Luka \u010Cehovin Zajc",
 			"http://www.vicos.si/lukacu" } };
 
 	/** The Constant HOMEPAGE. */
-	public static final String HOMEPAGE = "http://www.vicos.si/lukacu/aibu/";
+	public static final String HOMEPAGE = "http://github.com/votchallenge/aibu/";
 
 	/** The Constant VERSION. */
-	public static final String VERSION = "0.3 (alpha)";
+	public static final String VERSION = "0.4.0";
 
 	/** The Constant FILE_FILTER. */
 	public static final FileFilter FILE_FILTER = new FileFilter() {
@@ -107,11 +108,13 @@ public class Annotator extends Application {
 		ImageStore.registerAnchorClass(FigureViewer.class);
 
 		try {
+			Color foregroundColor = UIManager.getColor("text");
+
 			ImageStore.registerImageProvider(new FontImageProvider("fa:",
-					Annotator.class, "fontawesome.ttf", new Dimension(16, 16)));
+					Annotator.class, "fontawesome.ttf", new Dimension(16, 16), foregroundColor));
 			ImageStore.registerImageProvider(new FontImageProvider(
 					"annotation:", Annotator.class, "annotation.ttf",
-					new Dimension(16, 16)));
+					new Dimension(16, 16), foregroundColor));
 		} catch (FontFormatException e1) {
 			Application.getApplicationLogger().report(e1);
 		}
