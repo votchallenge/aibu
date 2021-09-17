@@ -18,6 +18,7 @@ import java.util.Vector;
 import si.vicos.annotations.Annotation;
 import si.vicos.annotations.PolygonAnnotation;
 import si.vicos.annotations.RectangleAnnotation;
+import si.vicos.annotations.SegmentationMaskAnnotation;
 
 /**
  * The Class Trajectory.
@@ -38,7 +39,8 @@ public class Trajectory implements List<Annotation>, AnnotationList {
 		PrintWriter writer = new PrintWriter(out);
 
 		for (Annotation a : data) {
-			writer.print(a.pack());
+			String string = a.pack();
+			writer.print(string);
 			writer.print("\n");
 		}
 
@@ -382,8 +384,10 @@ public class Trajectory implements List<Annotation>, AnnotationList {
 		} else {
 
 			String[] tokens = data.split(",");
-
-			if (tokens.length == 1) {
+			if( tokens[0].charAt(0) == 'm'){
+				return new SegmentationMaskAnnotation(tokens);
+			}
+			else if (tokens.length == 1) {
 
 				return new CodeAnnotation(Integer.parseInt(tokens[0]));
 

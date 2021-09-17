@@ -85,16 +85,11 @@ import org.coffeeshop.swing.viewers.Timeline.TimelineListener;
 
 import si.vicos.annotations.Annotation;
 import si.vicos.annotations.RectangleAnnotation;
-import si.vicos.annotations.editor.AnnotatedImageFigure;
+import si.vicos.annotations.editor.*;
 import si.vicos.annotations.editor.AnnotatedImageFigure.AnnotationPeer;
-import si.vicos.annotations.editor.AnnotationEditor;
 import si.vicos.annotations.editor.AnnotationEditor.AnnotationEditorFactory;
-import si.vicos.annotations.editor.Annotator;
-import si.vicos.annotations.editor.RectangleAnnotationEditor;
-import si.vicos.annotations.editor.RotatedRectangleAnnotationEditor;
-import si.vicos.annotations.editor.ToggleAction;
+import si.vicos.annotations.editor.SegmentationMaskAnnotationEditor;
 import si.vicos.annotations.editor.ToggleAction.ToggleActionGroup;
-import si.vicos.annotations.editor.ToolbarToggleButton;
 import si.vicos.annotations.editor.tracking.EditableAnnotatedSequence.EditList;
 import si.vicos.annotations.editor.tracking.EditableAnnotatedSequence.EditRegionOperation;
 import si.vicos.annotations.editor.tracking.TagPlot.SingleTagPlot;
@@ -232,6 +227,8 @@ public class TrackingEditor extends PersistentWindow {
 		annotationEditors.put(
 				RotatedRectangleAnnotationEditor.FACTORY.getName(),
 				RotatedRectangleAnnotationEditor.FACTORY);
+		annotationEditors.put(SegmentationMaskAnnotationEditor.FACTORY.getName(),
+				SegmentationMaskAnnotationEditor.FACTORY);
 		// annotationEditors.put(PolygonAnnotationEditor.FACTORY.getName(),
 		// PolygonAnnotationEditor.FACTORY);
 	}
@@ -1582,7 +1579,7 @@ public class TrackingEditor extends PersistentWindow {
 
 		JPanel panelContainer = new JPanel(new BorderLayout(10, 10));
 		panelContainer.add(panel, BorderLayout.CENTER);
-		panelContainer.add(navigationMenu, BorderLayout.SOUTH);
+			panelContainer.add(navigationMenu, BorderLayout.SOUTH);
 
 		splitOuter.setTopComponent(splitInner);
 		splitOuter.setBottomComponent(timeline);

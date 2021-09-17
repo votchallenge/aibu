@@ -227,7 +227,6 @@ public class RectangleAnnotationEditor extends AnnotationEditor {
 	 */
 	@Override
 	public void reset() {
-
 		peer.setAnnotation(new RectangleAnnotation());
 		resetInput();
 	}

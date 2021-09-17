@@ -28,6 +28,9 @@ public class FontImageProvider implements ImageProvider {
 	/** The prefix. */
 	private String prefix;
 
+	/** Color of the foreground */
+	private Color color;
+
 	/**
 	 * Instantiates a new font image provider.
 	 * 
@@ -38,12 +41,14 @@ public class FontImageProvider implements ImageProvider {
 	 * @param size
 	 *            the size
 	 */
-	public FontImageProvider(String prefix, Font font, Dimension size) {
+	public FontImageProvider(String prefix, Font font, Dimension size, Color color) {
 		this.font = font;
 
 		this.size = new Dimension(size);
 
 		this.prefix = prefix;
+
+		this.color = color;
 	}
 
 	/**
@@ -63,7 +68,7 @@ public class FontImageProvider implements ImageProvider {
 	 *             the font format exception
 	 */
 	public FontImageProvider(String prefix, Class<?> base, String name,
-			Dimension size) throws IOException, FontFormatException {
+			Dimension size, Color color) throws IOException, FontFormatException {
 
 		Font font = Font.createFont(Font.TRUETYPE_FONT,
 				base.getResourceAsStream(name));
@@ -73,6 +78,8 @@ public class FontImageProvider implements ImageProvider {
 		this.size = new Dimension(size);
 
 		this.prefix = prefix;
+
+		this.color = color;
 	}
 
 	/*
@@ -98,7 +105,7 @@ public class FontImageProvider implements ImageProvider {
 
 		Rectangle2D bounds = font.getStringBounds(text,
 				g.getFontRenderContext());
-		g.setColor(Color.BLACK);
+		g.setColor(this.color);
 		double scaling = Math.min(size.getWidth() / bounds.getWidth(),
 				size.getHeight() / bounds.getHeight()) * 0.9;
 
