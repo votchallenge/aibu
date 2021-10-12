@@ -27,6 +27,7 @@ jobs:
 
       - name: Run a multi-line script
         run: |
+          # ivy is prerequired
           sudo apt-get install ivy
           git clone "https://github.com/lukacu/coffeeshop"
           cd coffeeshop
