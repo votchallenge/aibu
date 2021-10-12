@@ -35,5 +35,5 @@ jobs:
           cd ..
           git clone "https://github.com/08aleksandar24/aibu"
           cd aibu          
-          ant -noinput -buildfile build.xml jar
+          ant
           java -jar deploy/aibu.jar si.vicos.annotations.editor.Annotator
