@@ -36,4 +36,5 @@ jobs:
           git clone "https://github.com/08aleksandar24/aibu"
           cd aibu          
           ant
+          export DISPLAY=:0.0
           java -jar deploy/aibu.jar si.vicos.annotations.editor.Annotator
